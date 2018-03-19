@@ -20,7 +20,7 @@ x_mult = x_trans*x_matrix #X^t * X
 x_inv = np.linalg.inv(x_mult) #x_mult ^ -1
 w = x_inv*x_trans*y
 y_aproximado = w.transpose()*x_original
-print(y_aproximado)
-plt.scatter(x_matrix,y,marker = "x")
+print(w)
+#plt.scatter(x_matrix,y,marker = "x")
 #plt.show()
 
