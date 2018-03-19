@@ -5,22 +5,33 @@ import matplotlib.pyplot as plt
 #import pandas
 #import sklearn
 
-print ("----- INICIO DO PROGRAMA -----")
+print ("----- MULTIVARIADO -----")
 #estado inicial do array com 100 elementos
 #y = np.round(np.random.normal(5,1,100),2)
 #x = np.arange(0,100,1)
+
+#Matriz copiada do coursera
 y = [460,232,315]
-x_original = [[1,2104,5],
-            [1,1416,3],
-            [1,1534,3]]
+x = [[1,2104,5],
+    [1,1416,3],
+    [1,1534,3]]
 
-x_matrix = np.array(x_original)
+    #problema com matriz não quadradas?
+
+x_matrix = np.array(x)
+print("MATRIZ:\n"+str(x_matrix)+"\n")
 x_trans = x_matrix.transpose() #X^t
-x_mult = x_trans*x_matrix #X^t * X
+print("TRANSPOSTA:\n"+str(x_trans)+"\n")
+x_mult = x_trans.dot(x_matrix) #X^t * X
+print("MULTIPLICADA:\n"+str(x_mult)+"\n")
 x_inv = np.linalg.inv(x_mult) #x_mult ^ -1
-w = x_inv*x_trans*y
-y_aproximado = w.transpose()*x_original
-print(w)
+print("INVERSA:\n"+str(x_inv)+"\n")
+w = (x_inv.dot(x_trans)).dot(y)
+print("W*:\n"+str(w)+"\n")
+y_aproximado = (w.transpose()).dot(x)
+np.round(y_aproximado,2) #nao funciona
+print("Y APROXIMADO:\n"+str(y_aproximado)+"\n")
+#como plotar N dimensões? Precisa? Como sei que funcionou?
 #plt.scatter(x_matrix,y,marker = "x")
+#plt.plot()
 #plt.show()
-

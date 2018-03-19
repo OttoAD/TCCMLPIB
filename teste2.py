@@ -1,6 +1,9 @@
+#CODIGO DA INTERNET
+#https://www.amherst.edu/system/files/media/1287/SLR_Leastsquares.pdf
+#https://www.geeksforgeeks.org/linear-regression-python-implementation/
 import numpy as np
 import matplotlib.pyplot as plt
- 
+
 def estimate_coef(x, y):
     # number of observations/points
     n = np.size(x)
