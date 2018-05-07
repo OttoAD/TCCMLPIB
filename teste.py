@@ -2,7 +2,7 @@ import numpy as np
 import scipy as sp
 import matplotlib as mp
 import matplotlib.pyplot as plt
-#import pandas
+from pandas import DataFrame as df
 #import sklearn
 
 print ("----- MULTIVARIADO -----")
@@ -28,10 +28,9 @@ x_inv = np.linalg.inv(x_mult) #x_mult ^ -1
 print("INVERSA:\n"+str(x_inv)+"\n")
 w = (x_inv.dot(x_trans)).dot(y)
 print("W*:\n"+str(w)+"\n")
-y_aproximado = (w.transpose()).dot(x)
+y_aproximado = x_matrix.dot(w)
 np.round(y_aproximado,2) #nao funciona
 print("Y APROXIMADO:\n"+str(y_aproximado)+"\n")
-#como plotar N dimensões? Precisa? Como sei que funcionou?
 #plt.scatter(x_matrix,y,marker = "x")
 #plt.plot()
 #plt.show()
