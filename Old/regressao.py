@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # ----- LEITURA DO ARQUIVO -----
 def importCSVData(fileName,index=None,separator=",",dates=False):
-    """Função que toma como argumento o nome do arquivo, a coluna de índice e o separador do csv
+    """Função que toma como argumento o nome do arquivo, a coluna de índice, o separador do csv e parsing de datas
     para realizar a leitura dos dados e retornar um dataframe com a função read_csv do pacote pandas"""
     return pd.read_csv(fileName,index_col=index,sep=separator,parse_dates=dates)
 
@@ -33,22 +33,25 @@ def averageAbsoluteError(table1,table2):
     return table1.subtract(table2).abs().mean()
 
 # ----- EXECUÇÃO -----
-indexes = importCSVData(fileName="Dados.csv",index="Periodo",dates=True)
+indexes = importCSVData(fileName="Dados2.csv",index="Periodo",dates=True)
 indexes.iloc[:,1:] = normalizeData(indexes.iloc[:,1:])
 originalGDP = importCSVData("PIB.csv",index="Periodo",dates=True)
-weightTable = linearRegression(indexes,originalGDP)
-predictedGDP = indexes.dot(weightTable)
+weightTable = linearRegression(indexes.iloc[:66,:],originalGDP.iloc[:66,:])
+predictedGDP = indexes.iloc[67:,:].dot(weightTable)
 predictedGDP.index = predictedGDP.index.to_period("Q")
 originalGDP.index = originalGDP.index.to_period("Q")
-GDPError = averageAbsoluteError(predictedGDP,originalGDP)
+GDPError = averageAbsoluteError(predictedGDP.iloc[67:,:],originalGDP.iloc[67:,:])
 
 # ----- PLOTAGEM DOS GRÁFICOS -----
-data = pd.concat([originalGDP,predictedGDP],axis=1)
+data = pd.concat([originalGDP.iloc[67:,:],predictedGDP],axis=1)
 data.columns = ['Real','Estimado']
 chart = data.plot(title = 'PIB Real x Estimado',xticks=data.index,rot=45)
 chart.set_xlabel('Periodo (Trimestral)')
 chart.set_ylabel('PIB (%)')
 chart.grid(True, which='minor', axis='x' )
 chart.grid(True, which='major', axis='y' )
+
+print("\n----- MATRIZ DE PESOS -----\n"+str(weightTable))
+print("\n----- PIBS -----\n"+str(data))
+print("\nERRO:\n"+str(GDPError))
 plt.show()
-print(data)
