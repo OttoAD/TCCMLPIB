@@ -59,15 +59,15 @@ class NeuralNetwork:
     
     def calculate_beta(self, H, target): #Beta = H^-1 * Target
         """Método que recebe duas matrizes H e T e retorna o cálculo da matriz de pesos beta"""
-        if self._neurons <= target.shape[0]: #if the number of neurons is lower or equal to the number of samples. The linear regression uses this one
-            mult = H.T.dot(H)
-            mult_inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)
-            pseudo_inverse = mult_inverse.dot(H.T)
-        
-        else:    #else, if the number or neurons is higher than the number of samples
-            mult = H.dot(H.T)
-            mult_inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)
-            pseudo_inverse = H.T.dot(mult_inverse)
+        #if self._neurons <= target.shape[0]: #if the number of neurons is lower or equal to the number of samples. The linear regression uses this one
+        mult = H.T.dot(H)
+        mult_inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)
+        pseudo_inverse = mult_inverse.dot(H.T)
+    
+        # else:    #else, if the number or neurons is higher than the number of samples
+        #     mult = H.dot(H.T)
+        #     mult_inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)
+        #     pseudo_inverse = H.T.dot(mult_inverse)
 
         self._beta = pseudo_inverse.T.dot(target)
 
@@ -80,11 +80,12 @@ class NeuralNetwork:
         H = self.feedforward(table.iloc[:index,:])
         self.calculate_beta(H,target.iloc[:index,:])
 
-    def validate(self, table, target, percentage = 0.3):
+    def validate(self, table, percentage = 0.3):
         """Método responsável por realizar a validação da rede neural"""
         if percentage == 1:
             index = 0
         else:
-            index = np.round(percentage*(table.shape[0])).astype(int)
+            index = table.shape[0] - np.round(percentage*(table.shape[0])).astype(int)
+
         H = self.feedforward(table.iloc[index:,:])
         return self._beta.T.dot(H)

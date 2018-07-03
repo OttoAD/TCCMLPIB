@@ -34,36 +34,16 @@ def main():
     #Samples: shuffledGDP.shape[0] which is the value of all the rows/observations in the input dataframe
     # The number of neurons is arbitrary and the data value is the input value
 
-    neuralNetwork = nt.NeuralNetwork(neurons = 400,
+    neuralNetwork = nt.NeuralNetwork(neurons = 500,
                                     data = shuffledIndex)
     
     # PANDAS: Not only must the shapes of DF1 and DF2 be correct, but also the COLUMN names of DF1 must match the INDEX names of DF2.
     # The NumPy dot function does no such thing. It will just compute the matrix product based on the values in the underlying arrays.
     # The weights matrix was multiplied by the transposed matrix of the input index values.
 
-    # H = neuralNetwork.feedforward(shuffledIndex)
-    # B = neuralNetwork.calculate_beta(H,shuffledGDP)
-
-    # ESTIMADO1 = B.T.dot(H)
-    # print(ESTIMADO1)
-
-    # #testando de novo
-    # PESOS = neuralNetwork.weights()
-    # H2 = PESOS.dot(shuffledIndex.T)
-    # H2 = H2.apply(neuralNetwork.sigmoid)
-
-    # ESTIMADO = B.T.dot(H2)
-    # print(ESTIMADO)
-
-    neuralNetwork.train(shuffledIndex, shuffledGDP, percentage = 1)
-    ESTIMADO = neuralNetwork.validate(shuffledIndex, shuffledGDP, percentage = 1)
-    print(ESTIMADO)
-    
-    combinado = pd.concat([shuffledGDP, ESTIMADO.T], axis=1)
-    print(combinado)
-    
-    GDPError = inputData.avgerror(ESTIMADO.T, shuffledGDP)
-    print(GDPError)
+    neuralNetwork.train(shuffledIndex, shuffledGDP)
+    predictedGDP = neuralNetwork.validate(shuffledIndex)
+    inputData.analyze(predictedGDP.T,shuffledGDP)
 
 if __name__ == "__main__":
     main()

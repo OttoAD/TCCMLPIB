@@ -46,3 +46,12 @@ class Data:
     def avgerror(self, table1, table2):
         """Calcula o erro absoluto médio entre dois conjuntos de valores"""
         return table1.subtract(table2).abs().mean()
+    
+    def compare_results(self, result_table, original_table):
+        """Concatena dois dataframes para comparação dos resultados"""
+        return pd.concat([original_table, result_table], axis = 1)
+    
+    def analyze(self, result_table, original_table):
+        index = original_table.shape[0] - result_table.shape[0]
+        print(" ----- ORIGINAL X ESTIMADO ----- \n"+ str(self.compare_results(result_table, original_table.iloc[index:,:])) + "\n")
+        print(" ----- ERRO ----- \n" + str(self.avgerror(result_table,original_table.iloc[index:,:])) + "\n")
