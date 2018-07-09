@@ -34,7 +34,7 @@ def main():
     #Samples: shuffledGDP.shape[0] which is the value of all the rows/observations in the input dataframe
     # The number of neurons is arbitrary and the data value is the input value
 
-    neuralNetwork = nt.NeuralNetwork(neurons = 500,
+    neuralNetwork = nt.NeuralNetwork(neurons = 750,
                                     data = shuffledIndex)
     
     # PANDAS: Not only must the shapes of DF1 and DF2 be correct, but also the COLUMN names of DF1 must match the INDEX names of DF2.
@@ -42,7 +42,7 @@ def main():
     # The weights matrix was multiplied by the transposed matrix of the input index values.
 
     neuralNetwork.train(shuffledIndex, shuffledGDP)
-    predictedGDP = neuralNetwork.validate(shuffledIndex)
+    predictedGDP = neuralNetwork.test(shuffledIndex)
     inputData.analyze(predictedGDP.T,shuffledGDP)
 
 if __name__ == "__main__":
