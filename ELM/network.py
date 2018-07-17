@@ -4,11 +4,15 @@ import pandas as pd
 
 
 class NeuralNetwork:
-    """Classe que modela uma rede neural artificial simples.
-    Implementa uma Extreme Learning Machine (ELM) utilizando dos conceitos de uma Single Layer Feedforward Network (SLFN)"""
+    """
+    Classe que modela uma rede neural artificial simples.
+    Implementa uma Extreme Learning Machine (ELM) utilizando dos conceitos de uma Single Layer Feedforward Network (SLFN)
+    """
 
     def __init__(self, neurons, weights = None, data = None):
-        """Inicializador da classe que instancia os atributos de pesos e quantidade de neurônios"""
+        """
+        Inicializador da classe que instancia os atributos de pesos e quantidade de neurônios
+        """
         if str(neurons).isalpha():
             raise ValueError("Neurons deve ser um valor numérico")
 
@@ -26,20 +30,28 @@ class NeuralNetwork:
 
     
     def weights(self):
-        """Método que retorna a matriz de pesos"""
+        """
+        Método que retorna a matriz de pesos
+        """
         return self._weights
     
     def neurons(self):
-        """Método que retorna o número de neurônios"""
+        """
+        Método que retorna o número de neurônios
+        """
         return self._neurons
     
     def beta(self):
-        """Método que retorna o valor do vetor Beta"""
+        """
+        Método que retorna o valor do vetor Beta
+        """
         return self._beta
     
     def generate_weights(self, table, num_neurons, average = 0, std_dev = 1):
-        """Método que gera aleatoriamente uma matriz de pesos de acordo com uma distribuição normal com média 0 e desvio padrão 1.
-        O tamanho da matriz é [numero de features, numero de neuronios]"""
+        """
+        Método que gera aleatoriamente uma matriz de pesos de acordo com uma distribuição normal com média 0 e desvio padrão 1.
+        O tamanho da matriz é [numero de features, numero de neuronios]
+        """
         
         if table is None:
             raise ValueError("Os dados de entrada não foram informados")
@@ -49,16 +61,22 @@ class NeuralNetwork:
         return pd.DataFrame(np.random.normal(average, std_dev, size = matrix_size)) 
 
     def sigmoid(self, z):
-        """Método que recebe um parâmetro Z e retorna o cálculo da função sigmoid (logística)"""
+        """
+        Método que recebe um parâmetro Z e retorna o cálculo da função sigmoid (logística)
+        """
         return 1.0/(1.0 + np.exp(-z))
 
     def feedforward(self, table):
-        """Método que calcula a matriz H: Sigmoide(W*X)"""
+        """
+        Método que calcula a matriz H: Sigmoide(W*X)
+        """
         H = self._weights.dot(table.T)
         return H.apply(self.sigmoid)
     
     def calculate_beta(self, H, target): #Beta = H^-1 * Target
-        """Método que recebe duas matrizes H e T e retorna o cálculo da matriz de pesos beta"""
+        """
+        Método que recebe duas matrizes H e T e retorna o cálculo da matriz de pesos beta
+        """
         if self._neurons <= target.shape[0]: #if the number of neurons is lower or equal to the number of samples. The linear regression uses this one
             mult = H.T.dot(H)
             mult_inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)
@@ -72,7 +90,19 @@ class NeuralNetwork:
         self._beta = pseudo_inverse.T.dot(target)
 
     def train(self, table, target, percentage = 0.7):
-        """Método responsável por realizar o treinamento da rede neural """
+        """
+        Método responsável por realizar o treinamento da rede neural
+                 
+        Parameters
+        ----------
+        table :
+        percentage :
+
+        Returns
+        ----------
+                    
+        """
+
         if percentage == 1:
             index = table.shape[0]
         else:
@@ -81,7 +111,19 @@ class NeuralNetwork:
         self.calculate_beta(H,target.iloc[:index,:])
 
     def test(self, table, percentage = 0.3):
-        """Método responsável por realizar o teste da rede neural"""
+        """
+        Método responsável por realizar o teste da rede neural
+        
+        Parameters
+        ----------
+        table :
+        percentage :
+
+        Returns
+        ----------
+                    
+        """
+
         if percentage == 1:
             index = 0
         else:
@@ -89,3 +131,9 @@ class NeuralNetwork:
 
         H = self.feedforward(table.iloc[index:,:])
         return self._beta.T.dot(H)
+    
+    def train_test_split(self, table, train_size = 0.7, test_size = 0.3):
+        """
+        """
+        
+        pass

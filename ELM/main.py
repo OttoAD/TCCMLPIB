@@ -2,18 +2,18 @@ import data as dt
 import regression as lr
 import network as nt
 import numpy as np
-import charts
+import elm_plot as pl
 import pandas as pd
 
 # Main method definition
 def main():
     # Instantiating classes
     inputData = dt.Data()
-    regressionModel = lr.LinearRegression()
+    lm = lr.LinearModel()
 
     # Importing data
-    indexTable = inputData.readData(fileName = "./data/Dados.csv", index = "Periodo", dates = True, period = "Q")
-    originalGDP = inputData.readData(fileName = "./data/PIB.csv", index = "Periodo", dates = True, period = "Q")
+    indexTable = inputData.read_data(fileName = "./data/Dados.csv", index = "Periodo", dates = True, period = "Q")
+    originalGDP = inputData.read_data(fileName = "./data/PIB.csv", index = "Periodo", dates = True, period = "Q")
 
     #Normalizing input data skipping the first row(bias row)
     indexTable = inputData.normalize(indexTable,begin = 1)
