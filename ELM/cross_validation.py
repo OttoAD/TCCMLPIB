@@ -1,49 +1,53 @@
 import numpy as np
 import scipy as sp
 import pandas as pd
+import network as nt
 
 class CrossValidation:
     """
     """
 
-    def __init__(self, k):
-        self._k = k
-        self._performance = None
-        self._step = None
-
-        pass
+    def __init__(self, k_splits):
+        self._k_splits = k_splits
     
     def get_k(self):
-        return self._k
+        return self._k_splits
 
-    def get_performance(self):
-        return self._performance
-    
-    def get_step(self):
-        return self._step
+    def split(self, table):
+        """
+        Parameters
+        ----------
+        table: a dataframe
 
-    def calculate_step(self, length):
+        Returns
+        -------
+        two calculated integer indexes begin and end of the window
+
         """
-        """
+        # implementation from the sickit learn library
+        fold_sizes = (table.shape[0] // self._k_splits) * np.ones(self._k_splits, dtype=np.int) #creates an array of sizes
+        fold_sizes[:table.shape[0] % self._k_splits] += 1 #corretcs the size if number of samples is odd 
+        current = 0
+
+        for fold_size in fold_sizes: #iterates over the array of size k_fold
+            begin, end = current, current + fold_size #slides the window 
+            yield begin, end #yeilds(returns) the current fold
+            current = end #updates the beginning of the fold
+
+    def KFold(self, table):
+        """"
+        Parameters
+        ----------
+        table: a dataframe
+
+        Returns
+        -------
         
-        self._step = np.round(length/self._k).astype(int)
-    
-    def kfold(self, table):
         """
-        """
+        for start,end in self.split(table): #iterates over the split dataset
+            training = pd.concat([table.iloc[:start,:],table.iloc[end:,:]]) #creats the training dataset
+            test = table.iloc[start:end,:] #creates the test dataset
+            yield training, test #return both datasets
 
-        if self._step == None:
-            self.calculate_step(table.shape[0])
-
-        
-
-        pass
-    
-    def cross_validate(self, table):
-        """
-        """
-        pass
-    
-
-
-    # implementar o shuffle nesta classe?
+            #fazer o treino/teste 70/30
+            #calcular a média do erro kfold pra cada iteração e retornar

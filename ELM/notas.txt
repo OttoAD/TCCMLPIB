@@ -1,0 +1,13 @@
+1 - Estudei economia básica
+2 - Estudei sobre métodos supervisionados
+3 - Estudei sobre regressões lineares univariadas
+4 - Estudei sobre regressões lineares multivariadas
+5 - Escolhemos as features (baseados nos trabalhos de referencia)
+6 - Aplicamos regressão linear multivariada e printamos o gráfico
+7 - Misturamos os valores das observações (para ajudar no modelo, colocamos valores de diferentes periodos)
+8 - O print agora era por barras, a divisão era 70/30 e a medida de erro era absoluta média
+9 - Estudamos sobre redes neurais
+10 - Estudamos sobre extreme learning machines
+11 - Implementamos a extreme learning machines (notamos que o numero de neuronios era importante)
+12 - Utilizamos k fold cross validation
+13 - ?

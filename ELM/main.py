@@ -4,6 +4,7 @@ import network as nt
 import numpy as np
 import elm_plot as pl
 import pandas as pd
+import cross_validation as cv
 
 # Main method definition
 def main():
@@ -45,5 +46,14 @@ def main():
     predictedGDP = neuralNetwork.test(shuffledIndex)
     inputData.analyze(predictedGDP.T,shuffledGDP)
 
+    ########## K FOLD CROSS VALIDATION  ##########
+    #kval = cv.CrossValidation(5)
+    #opa = kval.KFold(shuffledIndex)
+
+    neuralNetwork.validate(shuffledIndex, shuffledGDP)
+
+    #training,test = next(opa)
+    #print(training)
+    #print(test)
 if __name__ == "__main__":
     main()

@@ -1,7 +1,8 @@
 import numpy as np
 import scipy as sp
 import pandas as pd
-
+import cross_validation as cv
+import data as dt
 
 class NeuralNetwork:
     """
@@ -86,7 +87,8 @@ class NeuralNetwork:
             mult = H.dot(H.T)
             mult_inverse = pd.DataFrame(np.linalg.pinv(mult), mult.columns, mult.index) #pvin works, inv doesn't
             pseudo_inverse = H.T.dot(mult_inverse)
-
+        print(pseudo_inverse.T.shape)
+        print(target.shape)
         self._beta = pseudo_inverse.T.dot(target)
 
     def train(self, table, target, percentage = 0.7):
@@ -131,7 +133,31 @@ class NeuralNetwork:
 
         H = self.feedforward(table.iloc[index:,:])
         return self._beta.T.dot(H)
-    
+
+
+    def validate(self, table, target, k_samples = 5):
+        """"
+        Parameters
+        ----------
+        table: a dataframe
+
+        Returns
+        -------
+        
+        """
+        kval = cv.CrossValidation(k_samples)
+        data = dt.Data()
+        for training, test in kval.KFold(table):
+            #print(training)
+            #print(table)
+            #print(target)
+            print(table.iloc[18:,:])
+            self.train(table.iloc[18:,:], target, percentage = 1)
+            result = self.test(test, percentage = 1)
+            error = data.avgerror(result.T, target)
+            print(error)
+
+    #######################################################################
     def train_test_split(self, table, train_size = 0.7, test_size = 0.3):
         """
         """
