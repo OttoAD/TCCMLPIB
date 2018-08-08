@@ -140,3 +140,25 @@ class Data:
         A number representing the average absolute error for the given dataframes
         """
         return table1.subtract(table2).abs().mean()
+    
+    ##### METODOS AUXILIARES A SEREM REPENSADOS #####
+    def compare_results(self, result_table, original_table):
+        """
+        Concatenate two dataframes around the Y axis for value comparison.
+        
+        Parameters
+        ----------
+        results_table
+        original_table
+        
+        Returns
+        ----------
+        A new dataframe of the concatenated input tables
+        """
+        return pd.concat([original_table, result_table], axis = 1)
+    
+    def analyze(self, result_table, original_table):
+        index = original_table.shape[0] - result_table.shape[0]
+        print(" ----- ORIGINAL X ESTIMADO ----- \n"+ str(self.compare_results(result_table, original_table.iloc[index:,:])) + "\n")
+        print(" ----- ERRO ----- \n" + str(self.mean_average_error(result_table,original_table.iloc[index:,:])) + "\n")
+    

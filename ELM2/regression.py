@@ -53,7 +53,7 @@ class LinearModel:
         inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)# INVERSE = MULTIPLICATION^(-1)
         return inverse.dot(table.T) #INV * TRANSPOSE
 
-    def linear_regression(self, table, target):
+    def train(self, table, target):
         """
         This method computes a dataframe of weights for a linear regression given a training set and a testing set.
 
@@ -70,4 +70,12 @@ class LinearModel:
         
         """
 
-        return self.pseudoinverse(table).dot(target)  # PSEUDOINVERSE * Y
+        self._weights = self.pseudoinverse(table).dot(target)  # PSEUDOINVERSE * Y
+    
+    def linear_regression(self, table, target, training_percentage = 70):
+        """
+        
+        """
+        index = (training_percentage*table.shape[0])//100
+        self.train(table.iloc[:index, :], target.iloc[:index, :])
+        return table.iloc[index:].dot(self._weights)
