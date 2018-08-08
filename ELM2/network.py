@@ -74,19 +74,26 @@ class NeuralNetwork:
         """shuffledGDP
         Método que recebe duas matrizes H e T e retorna o cálculo da matriz de pesos beta
         """
-        regularization = np.identity(target.shape[0])/(self._C)
+        #regularization = np.identity(target.shape[0])/(self._C)
 
-        #if self._neurons <= target.shape[0]: #if the number of neurons is lower or equal to the number of samples. The linear regression uses this one
+        if self._neurons <= target.shape[0]: #if the number of neurons is lower or equal to the number of samples. The linear regression uses this one
         
-        mult = H.T.dot(H)
-        mult = pd.DataFrame(regularization, mult.columns, mult.index).add(mult)
-        mult_inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)
-        pseudo_inverse = mult_inverse.dot(H.T)
+            mult = H.T.dot(H)
+            regularization = np.identity(mult.shape[0])/(self._C)
+            mult = pd.DataFrame(regularization, mult.columns, mult.index).add(mult)
+            mult_inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)
+            pseudo_inverse = mult_inverse.dot(H.T)
 
         # The commented line of code below does the exact shame thing as the chunk above:
         #pseudo_inverse = pd.DataFrame(np.linalg.pinv(H), H.columns, H.index)
 
-        #else: #else, if the number or neurons is higher than the number of samples
+        else: #else, if the number or neurons is higher than the number of samples
+            mult = H.dot(H.T)
+            regularization = np.identity(mult.shape[0])/(self._C)
+            mult = pd.DataFrame(regularization, mult.columns, mult.index).add(mult)
+            mult_inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index) #pvin works, inv doesn't
+            pseudo_inverse = H.T.dot(mult_inverse)
+
         self._beta = pseudo_inverse.T.dot(target)
     
     def train(self, table, target, train_percentage = 70):
