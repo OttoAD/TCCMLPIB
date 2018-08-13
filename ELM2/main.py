@@ -51,31 +51,6 @@ def main():
 
     ########## K FOLD CROSS VALIDATION  ##########
     neuralNetwork.validate(table = shuffledIndex, target = shuffledGDP, k_samples = 5)
-    
-    #REMOVER AS LINHAS ABAIXO
-    #kval = cv.CrossValidation(5)
-    #opa = kval.KFold(table = shuffledIndex)
-    # training, test = next(opa)
-    # print(training)
-    # print(test)
-    # neuralNetwork.train(table = training, target = shuffledGDP.iloc[18:], train_percentage = 100)
-    # result = neuralNetwork.test(test, test_percentage = 100)
-    # print(result)
-    # error = inputData.mean_average_error(result.T, shuffledGDP)
-    # print(error)
-
-    # training, test = next(opa)
-    # print(training)
-    # print(test)
-    # a = pd.concat([shuffledGDP.iloc[:18],shuffledGDP.iloc[36:]])
-    # neuralNetwork.train(table = training, target = a, train_percentage = 100)
-
-    # training, test = next(opa)
-    # print(training)
-    # print(test)
-    # a = pd.concat([shuffledGDP.iloc[:18],shuffledGDP.iloc[36:]])
-    # neuralNetwork.train(table = training, target = a, train_percentage = 100)
-
-    #neuralNetwork.validate(shuffledIndex, shuffledGDP)
+        
 if __name__ == "__main__":
     main()

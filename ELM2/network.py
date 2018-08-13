@@ -151,11 +151,12 @@ class NeuralNetwork:
         kval = cv.CrossValidation(k_samples)
         data = dt.Data()
         error = np.array([])
-        for training, test, target2 in kval.KFold(table,target): #target2 é o target andando junto com o training
-            self.train(training, target2, train_percentage = 100)
+        for training, test, target_train, target_result in kval.KFold(table,target): #target2 é o target andando junto com o training
+            self.train(training, target_train, train_percentage = 100)
             result = self.test(test, test_percentage = 100)
             #print(result.T)
+            #print(target_result)
             #print(target2.shape) #questionar como fazer a comparação do valor previsto com o valor real
-            error = np.append(error, data.mean_average_error(result.T, target).values)
+            error = np.append(error, data.mean_average_error(result.T, target_result).values)
             print(error)
             print(np.mean(error))

@@ -44,9 +44,10 @@ class CrossValidation:
         """
         for start,end in self.split(table): #iterates over the split dataset
             training = pd.concat([table.iloc[:start,:],table.iloc[end:,:]]) #creats the training dataset
-            target2 = pd.concat([target.iloc[:start,:],target.iloc[end:,:]])
+            target_train = pd.concat([target.iloc[:start,:],target.iloc[end:,:]])
             test = table.iloc[start:end,:] #creates the test dataset
-            yield training, test, target2 #return both datasets
+            target_result = target.iloc[start:end]
+            yield training, test, target_train, target_result#return both datasets
 
             #fazer o treino/teste 70/30
             #calcular a média do erro kfold pra cada iteração e retornar
