@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import cross_validation as cv
+import data as dt
 
 class LinearModel:
     """
@@ -53,7 +55,7 @@ class LinearModel:
         inverse = pd.DataFrame(np.linalg.inv(mult), mult.columns, mult.index)# INVERSE = MULTIPLICATION^(-1)
         return inverse.dot(table.T) #INV * TRANSPOSE
 
-    def train(self, table, target):
+    def train(self, table, target, train_percentage = 70):
         """
         This method computes a dataframe of weights for a linear regression given a training set and a testing set.
 
@@ -69,13 +71,41 @@ class LinearModel:
         A dataframe of weights
         
         """
-
-        self._weights = self.pseudoinverse(table).dot(target)  # PSEUDOINVERSE * Y
+        if train_percentage == 100:
+            index = table.shape[0]
+        elif train_percentage > 0 and train_percentage < 100:
+            index = (train_percentage*table.shape[0])//100
+        self._weights = self.pseudoinverse(table.iloc[:index, :]).dot(target.iloc[:index, :])  # PSEUDOINVERSE * Y
     
-    def linear_regression(self, table, target, training_percentage = 70):
+    def test(self, table, test_percentage = 30):
         """
         
         """
-        index = (training_percentage*table.shape[0])//100
-        self.train(table.iloc[:index, :], target.iloc[:index, :])
+        #index = (training_percentage*table.shape[0])//100
+        #self.train(table.iloc[:index, :], target.iloc[:index, :])
+        if test_percentage == 100:
+            index = 0
+        elif test_percentage > 0 and test_percentage < 100:
+            index = table.shape[0] - ((test_percentage*table.shape[0])//100)
+        
         return table.iloc[index:].dot(self._weights)
+    
+    def validate(self, table, target, k_samples = 5):
+        """"
+        Parameters
+        ----------
+        table: a dataframe
+
+        Returns
+        -------
+        
+        """
+        kval = cv.CrossValidation(k_samples)
+        data = dt.Data()
+        error = np.array([])
+        for training, test, target_train, target_result in kval.KFold(table,target): #target2 é o target andando junto com o training
+            self.train(training, target_train, train_percentage = 100)
+            result = self.test(test, test_percentage = 100)
+            error = np.append(error, data.mean_average_error(result, target_result).values)
+        print("MULTIVARIATE LINEAR REGRESSION ERRORS:")
+        print("Mean Average Error: " + str(np.mean(error).round(decimals = 3)) + " | Standard Deviation: " + str(np.std(error).round(decimals = 3)))

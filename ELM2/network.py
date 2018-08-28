@@ -154,9 +154,6 @@ class NeuralNetwork:
         for training, test, target_train, target_result in kval.KFold(table,target): #target2 é o target andando junto com o training
             self.train(training, target_train, train_percentage = 100)
             result = self.test(test, test_percentage = 100)
-            #print(result.T)
-            #print(target_result)
-            #print(target2.shape) #questionar como fazer a comparação do valor previsto com o valor real
             error = np.append(error, data.mean_average_error(result.T, target_result).values)
-            print(error)
-            print(np.mean(error))
+        print("EXTREME LEARNING MACHINE ERRORS:")
+        print("Mean Average Error: " + str(np.mean(error).round(decimals = 3)) + " | Standard Deviation: " + str(np.std(error).round(decimals = 3)))

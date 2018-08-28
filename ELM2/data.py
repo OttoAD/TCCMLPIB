@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class Data:
     """
@@ -142,23 +143,30 @@ class Data:
         return table1.subtract(table2).abs().mean()
     
     ##### METODOS AUXILIARES A SEREM REPENSADOS #####
-    def compare_results(self, result_table, original_table):
-        """
-        Concatenate two dataframes around the Y axis for value comparison.
         
-        Parameters
-        ----------
-        results_table
-        original_table
-        
-        Returns
-        ----------
-        A new dataframe of the concatenated input tables
-        """
-        return pd.concat([original_table, result_table], axis = 1)
-    
     def analyze(self, result_table, original_table):
         index = original_table.shape[0] - result_table.shape[0]
-        print(" ----- ORIGINAL X ESTIMADO ----- \n"+ str(self.compare_results(result_table, original_table.iloc[index:,:])) + "\n")
+        print(" ----- ORIGINAL X ESTIMADO ----- \n"+ str(pd.concat([result_table, original_table.iloc[index:,:]],axis=1)) + "\n")
         print(" ----- ERRO ----- \n" + str(self.mean_average_error(result_table,original_table.iloc[index:,:])) + "\n")
-    
+        
+    def plot(self, data, path):
+        chart = data.plot()
+        chart.set_xlabel('Periodo (Trimestral)')
+        chart.set_ylabel('PIB (%)')
+        chart.grid(True, which='minor', axis='x' )
+        chart.grid(True, which='major', axis='y' )
+        chart.set_axisbelow(True)
+        plt.tight_layout()
+        plt.savefig(path, dpi = 600)
+        #plt.show()
+
+    def barPlot(self, data, path):
+        chart = data.plot(title = 'PIB Real x Estimado', kind='bar')
+        chart.set_ylabel('PIB (%)')
+        plt.grid(alpha=0.3)
+        chart.set_axisbelow(True)
+        for values in chart.patches:
+            chart.annotate(str(np.round(values.get_height(),2)), (values.get_x() * 1.01, values.get_height() * 1.015), ha='center', va='center', fontsize = 6)
+        plt.tight_layout()
+        plt.savefig(path,dpi = 600)
+        #plt.show()
