@@ -31,7 +31,7 @@ def main():
 #    lm.train(table = shuffledIndex, target = shuffledGDP)
 #    predictedRegressionGDP = lm.test(table = shuffledIndex)
 #    print(predictedRegressionGDP)
-#    lm.validate(table = shuffledIndex, target = shuffledGDP) #KFOLD
+    lm.validate(table = shuffledIndex, target = shuffledGDP) #KFOLD
 
     #NO SHUFFLING
     lm.train(table = indexTable, target = originalGDP)
@@ -47,8 +47,8 @@ def main():
     # The number of neurons is arbitrary and the data value is the input value
     
     #SHUFFLE
- #   neuralNetwork = nt.NeuralNetwork(neurons = 800, C = 10,
- #                                   data = shuffledIndex)
+    neuralNetwork = nt.NeuralNetwork(neurons = 800, C = 10,
+                                    data = shuffledIndex)
 
     #NO SHUFFLE                                
 #    neuralNetwork = nt.NeuralNetwork(neurons = 800, C = 10, data = indexTable)
@@ -64,7 +64,7 @@ def main():
  #   print(predictedGDP)
  #   print(shuffledGDP)
     #inputData.analyze(predictedGDP.T,shuffledGDP)
- #   neuralNetwork.validate(table = shuffledIndex, target = shuffledGDP, k_samples = 5) #KFOLD
+    neuralNetwork.validate(table = shuffledIndex, target = shuffledGDP, k_samples = 5) #KFOLD
 
     #NO SHUFFLING
 #    neuralNetwork.train(table = indexTable, target = originalGDP)
@@ -81,13 +81,18 @@ def main():
 #    data = pd.concat([predictedRegressionGDP,predictedELMGDP], axis = 1)
 #    print(data)
 
+    ############ GERAR RELATORIOS E ANALISES #############
+    errorRegression = inputData.mean_average_error(predictedRegressionGDP, originalGDP)
+    print("Erro Regressão: " + str(errorRegression))
+
     for i in range(1,11):
         neuralNetwork = nt.NeuralNetwork(neurons = 800, C = 10, data = indexTable)
-        neuralNetwork.train(table = indexTable, target = originalGDP)
-        predictedELMGDP = neuralNetwork.test(table = indexTable)
+        neuralNetwork.train(table = indexTable, target = originalGDP, train_percentage = 90)
+        predictedELMGDP = neuralNetwork.test(table = indexTable, test_percentage = 10)
+        print(inputData.mean_average_error(predictedELMGDP.T,originalGDP.iloc[81:]))
         predictedRegressionGDP = predictedRegressionGDP.rename(columns = {"PIB real (%)":"Regressão"})
         predictedELMGDP = predictedELMGDP.transpose().rename(columns = {"PIB real (%)":"ELM"})
-        data = pd.concat([predictedRegressionGDP,predictedELMGDP,originalGDP.iloc[63:]], axis = 1)
+        data = pd.concat([predictedRegressionGDP,predictedELMGDP,originalGDP.iloc[81:]], axis = 1)
         data.to_csv('./fig/data' + str(i)+'.csv', sep=',', encoding='utf8')
         inputData.plot(data,'./fig/line' + str(i) + '.png')
         inputData.barPlot(data,'./fig/bar' + str(i) + '.png')
